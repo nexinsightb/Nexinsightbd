@@ -1,0 +1,17 @@
+{
+  "name": "NexInsight  Smart Solutions. Real Impact.",
+  "short_name": "NexInsight",
+  "description": "Tech solutions agency specializing in QR review systems, web development, AI automation, and data analysis.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000d28",
+  "theme_color": "#007bff",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
