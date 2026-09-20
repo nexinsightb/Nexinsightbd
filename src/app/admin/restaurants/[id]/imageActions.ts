@@ -72,12 +72,11 @@ export async function uploadLogoAction(
     const filePath = `${restaurantId}/${fileName}`;
 
     const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
 
     // 1. Upload file to Supabase Storage with upsert
     const { error: storageErr } = await supabase.storage
       .from(BUCKET_NAME)
-      .upload(filePath, buffer, {
+      .upload(filePath, arrayBuffer, {
         contentType: file.type || "image/webp",
         upsert: true,
       });
@@ -195,12 +194,11 @@ export async function uploadGalleryImageAction(
     const filePath = `${restaurantId}/image-${sortOrder}.webp`;
 
     const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
 
     // 1. Upload to Storage
     const { error: storageErr } = await supabase.storage
       .from(BUCKET_NAME)
-      .upload(filePath, buffer, {
+      .upload(filePath, arrayBuffer, {
         contentType: file.type || "image/webp",
         upsert: true,
       });

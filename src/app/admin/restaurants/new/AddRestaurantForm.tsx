@@ -124,7 +124,11 @@ function validateImageFile(file: File): string | null {
 }
 
 function themeLabel(theme: string): string {
-  return theme === "theme-1" ? "Dark Gold" : theme;
+  const labels: Record<string, string> = {
+    "theme-1": "Dark Gold",
+    "theme-white": "White",
+  };
+  return labels[theme] ?? theme;
 }
 
 function statusLabel(status: string): string {
@@ -492,7 +496,8 @@ export default function AddRestaurantForm() {
                     value={form.theme}
                     onChange={(e) => setField("theme", e.target.value)}
                   >
-                    <option value="theme-1">Theme 1 — Dark Gold</option>
+                    <option value="theme-1">Theme - Dark Gold</option>
+                    <option value="theme-white">Theme - White</option>
                   </select>
                   <span className="arf-helper">More themes coming soon.</span>
                 </div>

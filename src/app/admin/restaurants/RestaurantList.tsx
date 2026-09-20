@@ -219,7 +219,7 @@ export default function RestaurantList({ restaurants }: Props) {
                     </td>
                     <td>
                       <span className="arl-theme-badge">
-                        {item.theme === "theme-1" ? "Dark Gold" : item.theme}
+                        {({ "theme-1": "Dark Gold", "theme-white": "White" } as Record<string, string>)[item.theme] || item.theme}
                       </span>
                     </td>
                     <td>

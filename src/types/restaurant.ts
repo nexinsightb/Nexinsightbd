@@ -20,8 +20,8 @@ export interface BusinessHours {
   time: string;  // e.g. "11:00 AM – 11:00 PM"
 }
 
-/** Theme identifier — more themes can be added in future (e.g. "theme-1", "theme-2") */
-export type RestaurantTheme = "theme-1";
+/** Theme identifier — add new theme keys here to register them globally */
+export type RestaurantTheme = "theme-1" | "theme-white";
 
 export interface Restaurant {
   /** URL slug — used in /r/[slug] */

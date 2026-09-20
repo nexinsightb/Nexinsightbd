@@ -529,7 +529,8 @@ export default function EditRestaurantForm({
                 <div className="arf-field">
                   <label htmlFor="arf-theme" className="arf-label">Theme</label>
                   <select id="arf-theme" className="arf-select" value={form.theme} onChange={(e) => setField("theme", e.target.value)}>
-                    <option value="theme-1">Dark Gold Theme (Default)</option>
+                    <option value="theme-1">Theme - Dark Gold (Default)</option>
+                    <option value="theme-white">Theme - White</option>
                   </select>
                 </div>
                 <div className="arf-field">
