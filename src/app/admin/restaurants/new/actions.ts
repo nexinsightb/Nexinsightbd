@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export interface CreateRestaurantInput {
   name: string;
@@ -174,6 +175,9 @@ export async function createRestaurantAction(
         error: subErr.message || "Failed to create subscription record.",
       };
     }
+
+    revalidatePath("/admin");
+    revalidatePath(`/r/${sanitizedSlug}`);
 
     return {
       success: true,

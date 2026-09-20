@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export interface UpdateRestaurantInput {
   name: string;
@@ -181,6 +182,10 @@ export async function updateRestaurantAction(
         error: subErr.message || "Failed to update subscription record.",
       };
     }
+
+    revalidatePath("/admin");
+    revalidatePath(`/r/${sanitizedSlug}`);
+    revalidatePath(`/admin/restaurants/${restaurantId}`);
 
     return { success: true };
   } catch (err: unknown) {

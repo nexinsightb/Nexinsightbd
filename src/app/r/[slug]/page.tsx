@@ -5,6 +5,7 @@ import { getThemeComponent } from "@/themes";
 import type { Restaurant } from "@/types/restaurant";
 
 export const runtime = "edge";
+export const dynamic = "force-dynamic";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
