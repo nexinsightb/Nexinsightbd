@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import AdminNavbar from "@/components/AdminNavbar";
 import RestaurantList, { RestaurantWithSubscription } from "./RestaurantList";
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
   title: "Restaurants — NexInsight Admin",
   description: "View and manage registered restaurant locations.",

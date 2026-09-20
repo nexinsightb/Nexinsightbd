@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import AdminNavbar from "@/components/AdminNavbar";
 import AddRestaurantForm from "./AddRestaurantForm";
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
   title: "Add Restaurant — NexInsight Admin",
   description: "Create a new restaurant page for NexInsight.",

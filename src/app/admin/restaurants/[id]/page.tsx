@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import AdminNavbar from "@/components/AdminNavbar";
 import EditRestaurantForm from "./EditRestaurantForm";
 
+export const runtime = "edge";
+
 const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 interface Props {

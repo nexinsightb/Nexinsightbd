@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import AdminNavbar from "@/components/AdminNavbar";
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
   title: "Admin Dashboard — NexInsight",
   description: "Manage your restaurant pages and NexInsight services.",

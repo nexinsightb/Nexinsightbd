@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getThemeComponent } from "@/themes";
 import type { Restaurant } from "@/types/restaurant";
 
+export const runtime = "edge";
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
