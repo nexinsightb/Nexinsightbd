@@ -15,7 +15,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const GOOGLE_SCRIPT_URL = process.env.GOOGLE_SCRIPT_URL;
+    const GOOGLE_SCRIPT_URL =
+      process.env.GOOGLE_SCRIPT_URL ||
+      "https://script.google.com/macros/s/AKfycbx9BDKmitSayt7nM7UUpceR8HkN6asm38jc-M1eK8EgWSARsrfZ-pBwasnQjtKVFh--/exec";
 
     if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("YOUR_APPS_SCRIPT")) {
       // Dev mode: simulate success

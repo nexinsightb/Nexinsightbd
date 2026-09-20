@@ -1,0 +1,724 @@
+/*
+ * Dark Gold Theme — Scoped CSS
+ * Selector namespace: .rp- (restaurant-page)
+ */
+
+/* ── DESIGN TOKENS ───────────────────────────────────────────── */
+.rp-root {
+  --rp-color-bg: #14181d;
+  --rp-color-bg-card: #1d232a;
+  --rp-color-accent: #d4af37;
+  --rp-color-accent-hover: #e5c158;
+  --rp-color-brand-logo: #f2c94c;
+  --rp-color-text: #f7f9fc;
+  --rp-color-text-muted: #9da7b3;
+  --rp-color-border: #2e3640;
+  --rp-color-btn-text-on-accent: #14181d;
+
+  --rp-font-display: "Playfair Display", Georgia, serif;
+  --rp-font-body: "DM Sans", system-ui, sans-serif;
+  --rp-radius-pill: 50px;
+  --rp-radius-card: 16px;
+  --rp-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* ── RESET (scoped) ──────────────────────────────────────────── */
+.rp-root *,
+.rp-root *::before,
+.rp-root *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── BASE ────────────────────────────────────────────────────── */
+.rp-root {
+  background: var(--rp-color-bg);
+  color: var(--rp-color-text);
+  font-family: var(--rp-font-body);
+  font-weight: 300;
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Prevent the root layout body font from leaking in */
+  font-size: 16px;
+}
+
+.rp-root a {
+  text-decoration: none;
+}
+
+.rp-root button {
+  font-family: var(--rp-font-body);
+}
+
+/* ── PAGE WRAPPER ─────────────────────────────────────────────── */
+.rp-page {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0 48px;
+}
+
+/* ── HEADER ──────────────────────────────────────────────────── */
+.rp-header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 24px 20px;
+  gap: 10px;
+}
+
+.rp-logo-wrap {
+  max-height: 96px;
+  max-width: 260px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rp-header-logo {
+  max-height: 96px;
+  max-width: 260px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ── FEEDBACK SECTION ────────────────────────────────────────── */
+.rp-feedback {
+  width: 100%;
+  padding: 4px 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.rp-feedback-headline {
+  font-family: var(--rp-font-display);
+  /* text-wrap:balance evenly distributes words across lines so you
+     never get "How was your" / "experience today?" imbalance. */
+  font-size: clamp(1.9rem, 7.5vw, 2.4rem);
+  font-weight: 700;
+  color: var(--rp-color-text);
+  text-align: center;
+  line-height: 1.2;
+  max-width: 320px;
+  text-wrap: balance;
+}
+
+.rp-btn-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
+  /* Never allow buttons to wrap — they must stay side by side */
+  flex-wrap: nowrap;
+}
+
+.rp-btn-satisfied,
+.rp-btn-not-satisfied {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  /* Slightly narrower padding so both buttons comfortably fit
+     side-by-side at 360px without needing flex-wrap */
+  padding: 12px 20px;
+  border-radius: var(--rp-radius-pill);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+  text-decoration: none;
+  border: none;
+  white-space: nowrap;
+}
+
+.rp-btn-satisfied {
+  background: var(--rp-color-accent);
+  color: var(--rp-color-btn-text-on-accent);
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.35);
+}
+
+.rp-btn-satisfied:hover {
+  background: var(--rp-color-accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.45);
+}
+
+.rp-btn-satisfied:active {
+  transform: translateY(0);
+}
+
+.rp-btn-not-satisfied {
+  background: transparent;
+  color: var(--rp-color-accent);
+  border: 1.5px solid var(--rp-color-accent);
+}
+
+.rp-btn-not-satisfied:hover {
+  background: rgba(212, 175, 55, 0.12);
+  transform: translateY(-2px);
+}
+
+.rp-btn-not-satisfied:active {
+  transform: translateY(0);
+}
+
+.rp-btn-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+/* ── CAROUSEL ────────────────────────────────────────────────── */
+.rp-dish-wrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  /* Tighter top padding on mobile so carousel sits closer to the CTA */
+  padding: 16px 0 8px;
+}
+
+.rp-carousel {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  /* pan-y lets vertical scrolling pass through while we capture horizontal */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.rp-carousel-viewport {
+  overflow: hidden;
+  border-radius: 16px;
+  box-shadow: 0 10px 32px rgba(44, 32, 21, 0.14);
+}
+
+.rp-carousel-track {
+  display: flex;
+  /* No gap: stepWidth is measured from viewport.offsetWidth so gap would
+     cause the controller to under-translate. Slides butt against each
+     other; overflow:hidden on the viewport hides adjacent slides. */
+  will-change: transform;
+  cursor: grab;
+}
+
+.rp-carousel-track.is-dragging {
+  cursor: grabbing;
+}
+
+.rp-carousel-track.is-animating {
+  transition: transform 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.rp-carousel-slide {
+  flex: 0 0 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--rp-color-bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rp-carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 16px;
+  pointer-events: none;
+  display: block;
+}
+
+/* Arrows */
+.rp-carousel-arrow {
+  position: absolute;
+  top: 50%;
+  /* Use transform instead of the shorthand 'translate' so hover/active
+     can safely extend the same transform without conflict */
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(29, 35, 42, 0.92);
+  color: var(--rp-color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  transition: transform 150ms ease, background 150ms ease, color 150ms ease;
+  z-index: 2;
+}
+
+.rp-carousel-arrow:hover {
+  background: var(--rp-color-bg-card);
+  color: var(--rp-color-accent);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.rp-carousel-arrow:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.rp-carousel-arrow--prev {
+  left: 8px;
+}
+
+.rp-carousel-arrow--next {
+  right: 8px;
+}
+
+@media (min-width: 600px) {
+  .rp-carousel-arrow--prev {
+    left: -14px;
+  }
+  .rp-carousel-arrow--next {
+    right: -14px;
+  }
+}
+
+/* Dots */
+.rp-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.rp-carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: var(--rp-color-border);
+  cursor: pointer;
+  padding: 0;
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.rp-carousel-dot.is-active {
+  background: var(--rp-color-accent);
+  transform: scale(1.3);
+}
+
+/* ── PROMO BANNER ────────────────────────────────────────────── */
+.rp-promo {
+  width: calc(100% - 32px);
+  margin: 4px 16px 0;
+  background: var(--rp-color-bg-card);
+  border: 1px solid var(--rp-color-border);
+  border-radius: var(--rp-radius-card);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.rp-promo-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.rp-promo-offer {
+  font-family: var(--rp-font-display);
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--rp-color-text);
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+
+.rp-promo-offer strong {
+  color: var(--rp-color-accent);
+  font-weight: 700;
+}
+
+.rp-promo-sub {
+  font-size: 0.85rem;
+  color: var(--rp-color-text-muted);
+  font-weight: 300;
+}
+
+.rp-promo-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.rp-icon-bubble {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--rp-color-accent);
+}
+
+.rp-btn-join {
+  border: 1.5px solid var(--rp-color-accent);
+  background: transparent;
+  color: var(--rp-color-accent);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: var(--rp-radius-pill);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.18s, color 0.18s;
+}
+
+.rp-btn-join:hover {
+  background: var(--rp-color-accent);
+  color: var(--rp-color-btn-text-on-accent);
+}
+
+/* ── DIVIDER ─────────────────────────────────────────────────── */
+.rp-hr {
+  width: calc(100% - 48px);
+  height: 1px;
+  background: var(--rp-color-border);
+  margin: 28px auto 0;
+}
+
+/* ── FOOTER ──────────────────────────────────────────────────── */
+.rp-footer {
+  width: 100%;
+  padding: 32px 24px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.rp-footer-inner {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.rp-footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  min-width: 100px;
+}
+
+.rp-footer-logo {
+  max-height: 64px;
+  max-width: 100px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.rp-footer-socials {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.rp-social-icon {
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid var(--rp-color-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--rp-color-text);
+  font-size: 0.9rem;
+  transition: border-color 0.18s, background 0.18s;
+}
+
+.rp-social-icon:hover {
+  border-color: var(--rp-color-accent);
+  background: rgba(212, 175, 55, 0.08);
+}
+
+.rp-footer-divider {
+  width: 1px;
+  align-self: stretch;
+  background: var(--rp-color-border);
+}
+
+.rp-footer-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rp-info-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.8rem;
+  color: var(--rp-color-text);
+  line-height: 1.5;
+}
+
+.rp-info-icon {
+  color: var(--rp-color-accent);
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-size: 0.85rem;
+}
+
+/* ── TAGLINE ─────────────────────────────────────────────────── */
+.rp-tagline-wrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px;
+}
+
+.rp-tagline-line {
+  flex: 1;
+  height: 1px;
+  background: var(--rp-color-border);
+}
+
+.rp-tagline {
+  font-family: var(--rp-font-display);
+  font-size: 0.88rem;
+  font-weight: 400;
+  color: var(--rp-color-accent);
+  white-space: nowrap;
+  font-style: italic;
+}
+
+.rp-heart {
+  text-align: center;
+  color: var(--rp-color-text-muted);
+  font-size: 0.75rem;
+  padding-top: 4px;
+}
+
+/* ── MODAL OVERLAY ───────────────────────────────────────────── */
+.rp-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  backdrop-filter: blur(3px);
+  animation: rpFadeIn 0.2s ease;
+}
+
+@keyframes rpFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.rp-modal {
+  background: var(--rp-color-bg-card);
+  border-radius: 24px 24px 0 0;
+  padding: 32px 24px 40px;
+  width: 100%;
+  max-width: 480px;
+  animation: rpSlideUp 0.3s ease;
+}
+
+@keyframes rpSlideUp {
+  from { transform: translateY(60px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.rp-modal-handle {
+  width: 40px;
+  height: 4px;
+  background: var(--rp-color-border);
+  border-radius: 2px;
+  margin: 0 auto 24px;
+}
+
+.rp-modal-title {
+  font-family: var(--rp-font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--rp-color-text);
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.rp-modal-sub {
+  font-size: 0.875rem;
+  color: var(--rp-color-text-muted);
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.rp-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.rp-field-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--rp-color-text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.rp-field-input,
+.rp-field-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--rp-color-border);
+  border-radius: 10px;
+  background: var(--rp-color-bg);
+  font-family: var(--rp-font-body);
+  font-size: 0.95rem;
+  color: var(--rp-color-text);
+  outline: none;
+  transition: border-color 0.18s;
+}
+
+.rp-field-input:focus,
+.rp-field-textarea:focus {
+  border-color: var(--rp-color-accent);
+}
+
+.rp-field-input::placeholder,
+.rp-field-textarea::placeholder {
+  color: var(--rp-color-text-muted);
+  opacity: 0.7;
+}
+
+.rp-field-textarea {
+  resize: none;
+  height: 90px;
+}
+
+.rp-btn-submit {
+  width: 100%;
+  padding: 14px;
+  background: var(--rp-color-accent);
+  color: var(--rp-color-btn-text-on-accent);
+  border: none;
+  border-radius: var(--rp-radius-pill);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.18s;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+}
+
+.rp-btn-submit:hover {
+  background: var(--rp-color-accent-hover);
+  transform: translateY(-1px);
+}
+
+.rp-btn-submit:active {
+  transform: translateY(0);
+}
+
+.rp-btn-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.rp-btn-cancel {
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  color: var(--rp-color-text-muted);
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* Chips */
+.rp-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.rp-chip {
+  padding: 6px 14px;
+  border-radius: var(--rp-radius-pill);
+  border: 1.5px solid var(--rp-color-border);
+  background: transparent;
+  font-size: 0.82rem;
+  color: var(--rp-color-text);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.rp-chip.selected {
+  border-color: var(--rp-color-accent);
+  background: rgba(212, 175, 55, 0.1);
+  color: var(--rp-color-accent);
+  font-weight: 500;
+}
+
+/* Error */
+.rp-form-error {
+  color: #f87171;
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+  text-align: center;
+  font-weight: 500;
+  min-height: 1.2em;
+}
+
+/* Success screen */
+.rp-success {
+  text-align: center;
+  padding: 12px 0 8px;
+}
+
+.rp-success-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+
+.rp-success-title {
+  font-family: var(--rp-font-display);
+  font-size: 1.4rem;
+  color: var(--rp-color-text);
+  margin-bottom: 8px;
+}
+
+.rp-success-msg {
+  font-size: 0.9rem;
+  color: var(--rp-color-text-muted);
+}
+
+/* ── REDUCED MOTION ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .rp-root *,
+  .rp-root *::before,
+  .rp-root *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
