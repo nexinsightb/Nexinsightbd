@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { revalidatePath } from "next/cache";
 
 export interface ImageActionResult {
   success: boolean;
@@ -47,6 +48,35 @@ async function verifyAdminAuth() {
   return supabase;
 }
 
+// Helper to extract relative storage path inside bucket from full URL
+function extractStoragePath(url: string | null | undefined): string | null {
+  if (!url) return null;
+  try {
+    const cleanUrl = url.split("?")[0];
+    const marker = `${BUCKET_NAME}/`;
+    const index = cleanUrl.indexOf(marker);
+    if (index !== -1) {
+      return decodeURIComponent(cleanUrl.slice(index + marker.length));
+    }
+  } catch {
+    // ignore parse error
+  }
+  return null;
+}
+
+async function getRestaurantSlug(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabase: any,
+  restaurantId: string
+): Promise<string | null> {
+  const { data } = await supabase
+    .from("restaurants")
+    .select("slug")
+    .eq("id", restaurantId)
+    .maybeSingle();
+  return data?.slug || null;
+}
+
 /**
  * Upload or Replace Brand / Square Logo
  */
@@ -89,12 +119,12 @@ export async function uploadLogoAction(
       };
     }
 
-    // 2. Get Public URL
+    // 2. Get Public URL with cache-busting timestamp
     const { data: urlData } = supabase.storage
       .from(BUCKET_NAME)
       .getPublicUrl(filePath);
 
-    const publicUrl = urlData.publicUrl;
+    const publicUrl = `${urlData.publicUrl}?v=${Date.now()}`;
     const fieldToUpdate = logoType === "brand" ? "brand_logo_path" : "square_logo_path";
 
     // 3. Update database row
@@ -112,6 +142,14 @@ export async function uploadLogoAction(
         success: false,
         error: dbErr.message || "Failed to save logo path in database.",
       };
+    }
+
+    // 4. Revalidate cache
+    const slug = await getRestaurantSlug(supabase, restaurantId);
+    revalidatePath(`/admin/restaurants/${restaurantId}`);
+    revalidatePath("/admin/restaurants");
+    if (slug) {
+      revalidatePath(`/r/${slug}`);
     }
 
     return { success: true, publicUrl };
@@ -135,14 +173,37 @@ export async function removeLogoAction(
     }
 
     const supabase = await verifyAdminAuth();
-    const fileName = logoType === "brand" ? "logo.webp" : "square-logo.webp";
-    const filePath = `${restaurantId}/${fileName}`;
-
-    // 1. Remove storage object
-    await supabase.storage.from(BUCKET_NAME).remove([filePath]);
-
-    // 2. Clear database column
     const fieldToUpdate = logoType === "brand" ? "brand_logo_path" : "square_logo_path";
+
+    // 1. Fetch current logo URL to remove exact file from storage
+    const { data: rest } = await supabase
+      .from("restaurants")
+      .select("slug, brand_logo_path, square_logo_path")
+      .eq("id", restaurantId)
+      .maybeSingle();
+
+    const currentUrl = rest ? (rest[fieldToUpdate] as string | null) : null;
+    const defaultFileName = logoType === "brand" ? "logo.webp" : "square-logo.webp";
+    const defaultFilePath = `${restaurantId}/${defaultFileName}`;
+
+    const filesToRemove = new Set<string>();
+    filesToRemove.add(defaultFilePath);
+
+    const extracted = extractStoragePath(currentUrl);
+    if (extracted) {
+      filesToRemove.add(extracted);
+    }
+
+    // 2. Remove storage object(s)
+    const { error: storageErr } = await supabase.storage
+      .from(BUCKET_NAME)
+      .remove(Array.from(filesToRemove));
+
+    if (storageErr) {
+      console.error("[removeLogoAction] Storage error:", storageErr);
+    }
+
+    // 3. Clear database column
     const { error: dbErr } = await supabase
       .from("restaurants")
       .update({
@@ -157,6 +218,13 @@ export async function removeLogoAction(
         success: false,
         error: dbErr.message || "Failed to clear logo path in database.",
       };
+    }
+
+    // 4. Revalidate cache
+    revalidatePath(`/admin/restaurants/${restaurantId}`);
+    revalidatePath("/admin/restaurants");
+    if (rest?.slug) {
+      revalidatePath(`/r/${rest.slug}`);
     }
 
     return { success: true };
@@ -211,12 +279,12 @@ export async function uploadGalleryImageAction(
       };
     }
 
-    // 2. Get Public URL
+    // 2. Get Public URL with cache-busting timestamp
     const { data: urlData } = supabase.storage
       .from(BUCKET_NAME)
       .getPublicUrl(filePath);
 
-    const publicUrl = urlData.publicUrl;
+    const publicUrl = `${urlData.publicUrl}?v=${Date.now()}`;
 
     // 3. Upsert into `restaurant_images` table
     const { error: dbErr } = await supabase
@@ -236,6 +304,14 @@ export async function uploadGalleryImageAction(
         success: false,
         error: dbErr.message || "Failed to save gallery image in database.",
       };
+    }
+
+    // 4. Revalidate cache
+    const slug = await getRestaurantSlug(supabase, restaurantId);
+    revalidatePath(`/admin/restaurants/${restaurantId}`);
+    revalidatePath("/admin/restaurants");
+    if (slug) {
+      revalidatePath(`/r/${slug}`);
     }
 
     return { success: true, publicUrl };
@@ -263,12 +339,41 @@ export async function removeGalleryImageAction(
     }
 
     const supabase = await verifyAdminAuth();
-    const filePath = `${restaurantId}/image-${sortOrder}.webp`;
 
-    // 1. Remove storage object
-    await supabase.storage.from(BUCKET_NAME).remove([filePath]);
+    // 1. Fetch current gallery image record & restaurant slug
+    const [{ data: imgRecord }, { data: rest }] = await Promise.all([
+      supabase
+        .from("restaurant_images")
+        .select("image_path")
+        .eq("restaurant_id", restaurantId)
+        .eq("sort_order", sortOrder)
+        .maybeSingle(),
+      supabase
+        .from("restaurants")
+        .select("slug")
+        .eq("id", restaurantId)
+        .maybeSingle(),
+    ]);
 
-    // 2. Delete database row from `restaurant_images`
+    const defaultFilePath = `${restaurantId}/image-${sortOrder}.webp`;
+    const filesToRemove = new Set<string>();
+    filesToRemove.add(defaultFilePath);
+
+    const extracted = extractStoragePath(imgRecord?.image_path);
+    if (extracted) {
+      filesToRemove.add(extracted);
+    }
+
+    // 2. Remove storage object(s)
+    const { error: storageErr } = await supabase.storage
+      .from(BUCKET_NAME)
+      .remove(Array.from(filesToRemove));
+
+    if (storageErr) {
+      console.error("[removeGalleryImageAction] Storage error:", storageErr);
+    }
+
+    // 3. Delete database row from `restaurant_images`
     const { error: dbErr } = await supabase
       .from("restaurant_images")
       .delete()
@@ -281,6 +386,13 @@ export async function removeGalleryImageAction(
         success: false,
         error: dbErr.message || "Failed to delete gallery image record.",
       };
+    }
+
+    // 4. Revalidate cache
+    revalidatePath(`/admin/restaurants/${restaurantId}`);
+    revalidatePath("/admin/restaurants");
+    if (rest?.slug) {
+      revalidatePath(`/r/${rest.slug}`);
     }
 
     return { success: true };

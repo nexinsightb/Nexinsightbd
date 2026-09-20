@@ -187,6 +187,12 @@ export default function EditRestaurantForm({
     if (submitState !== "idle") setSubmitState("idle");
   }
 
+  /* ── Sync image paths from props when updated ───────────────── */
+  useEffect(() => {
+    setBrandLogoPath(restaurant.brand_logo_path || null);
+    setSquareLogoPath(restaurant.square_logo_path || null);
+  }, [restaurant.brand_logo_path, restaurant.square_logo_path]);
+
   /* ── Logo Upload & Remove Handlers ─────────────────────────── */
   async function handleLogoUpload(logoType: "brand" | "square", file: File) {
     const key = logoType;
@@ -203,12 +209,12 @@ export default function EditRestaurantForm({
         return;
       }
 
-      const cacheBustedUrl = `${res.publicUrl}?t=${Date.now()}`;
       if (logoType === "brand") {
-        setBrandLogoPath(cacheBustedUrl);
+        setBrandLogoPath(res.publicUrl);
       } else {
-        setSquareLogoPath(cacheBustedUrl);
+        setSquareLogoPath(res.publicUrl);
       }
+      router.refresh();
     } catch (err: unknown) {
       console.error(err);
       setImageErrors((prev) => ({ ...prev, [key]: "Unexpected error during upload." }));
@@ -234,6 +240,7 @@ export default function EditRestaurantForm({
       } else {
         setSquareLogoPath(null);
       }
+      router.refresh();
     } catch (err: unknown) {
       console.error(err);
       setImageErrors((prev) => ({ ...prev, [key]: "Unexpected error during removal." }));
@@ -258,8 +265,9 @@ export default function EditRestaurantForm({
         return;
       }
 
-      const cacheBustedUrl = `${res.publicUrl}?t=${Date.now()}`;
-      setGalleryMap((prev) => ({ ...prev, [sortOrder]: cacheBustedUrl }));
+      const newUrl: string = res.publicUrl;
+      setGalleryMap((prev) => ({ ...prev, [sortOrder]: newUrl }));
+      router.refresh();
     } catch (err: unknown) {
       console.error(err);
       setImageErrors((prev) => ({ ...prev, [key]: "Unexpected error during upload." }));
@@ -281,10 +289,16 @@ export default function EditRestaurantForm({
       }
 
       setGalleryMap((prev) => {
-        const copy = { ...prev };
-        delete copy[sortOrder];
+        const copy: Record<number, string> = {};
+        Object.entries(prev).forEach(([k, v]) => {
+          const numKey = Number(k);
+          if (numKey !== sortOrder) {
+            copy[numKey] = v;
+          }
+        });
         return copy;
       });
+      router.refresh();
     } catch (err: unknown) {
       console.error(err);
       setImageErrors((prev) => ({ ...prev, [key]: "Unexpected error during removal." }));
