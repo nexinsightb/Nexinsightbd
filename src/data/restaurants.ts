@@ -53,13 +53,32 @@ const restaurants: Restaurant[] = [
 
     theme: "theme-1",
   },
-
-  // ── ADD YOUR RESTAURANTS BELOW ──────────────────────────────────
-  // {
-  //   slug: "pizzaburg",
-  //   name: "Pizzaburg",
-  //   ...
-  // },
+  {
+    slug: "test2",
+    name: "Test Restaurant White",
+    tagline: "Experience our delicious menu & modern ambience.",
+    logoUrl: "/assets/images/logo-placeholder.png",
+    footerLogoUrl: "/assets/images/logo-placeholder.png",
+    carouselImages: [],
+    address: "123 White Theme Avenue, Dhaka",
+    phone: "+880 1700-000000",
+    businessHours: [
+      { label: "Hours", time: "11:00 AM – 11:00 PM" },
+    ],
+    socialLinks: {},
+    googleReviewUrl: "https://search.google.com",
+    googleSheetUrl: "",
+    campaignBackendUrl: "",
+    mainTitle: "Welcome to Test Restaurant",
+    googleButtonText: "Rate Us on Google",
+    feedbackButtonText: "Direct Feedback",
+    campaignEnabled: true,
+    promoTitle: "Join Our Special Club!",
+    promoDescription: "Get exclusive offers and birthday discounts when you sign up.",
+    promoCtaLabel: "Join Club",
+    promoSuccessMessage: "You've successfully joined!",
+    theme: "theme-white",
+  },
 ];
 
 /**
