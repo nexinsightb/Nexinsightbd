@@ -256,7 +256,9 @@ export default function RestaurantFeedbackPage({
               </div>
               <div className="rp-info-row">
                 <span className="rp-info-icon" aria-hidden="true">📞</span>
-                <span>{restaurant.phone}</span>
+                <a href={`tel:${restaurant.phone}`} style={{ color: "inherit", textDecoration: "none" }}>
+                  {restaurant.phone}
+                </a>
               </div>
               <div className="rp-info-row">
                 <span className="rp-info-icon" aria-hidden="true">🕐</span>
