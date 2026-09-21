@@ -73,7 +73,10 @@ export default async function RestaurantPage({ params }: PageProps) {
       phone,
       opening_time,
       closing_time,
-      closing_text
+      closing_text,
+      facebook_url,
+      instagram_url,
+      whatsapp_url
     `)
     .eq("slug", slug)
     .single();
@@ -124,7 +127,11 @@ export default async function RestaurantPage({ params }: PageProps) {
       },
       ...(restaurant.closing_text ? [{ label: "Notes", time: restaurant.closing_text }] : []),
     ],
-    socialLinks: {},
+    socialLinks: {
+      facebook: restaurant.facebook_url || undefined,
+      instagram: restaurant.instagram_url || undefined,
+      whatsapp: restaurant.whatsapp_url || undefined,
+    },
     googleReviewUrl: restaurant.google_review_url || "#",
     googleSheetUrl: backend?.feedback_backend_url || "",
     campaignBackendUrl: backend?.campaign_backend_url || "",

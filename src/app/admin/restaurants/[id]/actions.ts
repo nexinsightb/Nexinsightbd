@@ -16,6 +16,9 @@ export interface UpdateRestaurantInput {
   campaignTitle?: string;
   campaignDescription?: string;
   campaignButtonText?: string;
+  facebookUrl?: string;
+  instagramUrl?: string;
+  whatsappUrl?: string;
   address?: string;
   phone?: string;
   openingTime?: string;
@@ -115,6 +118,9 @@ export async function updateRestaurantAction(
         campaign_title: input.campaignTitle?.trim() || null,
         campaign_description: input.campaignDescription?.trim() || null,
         campaign_button_text: input.campaignButtonText?.trim() || null,
+        facebook_url: input.facebookUrl?.trim() || null,
+        instagram_url: input.instagramUrl?.trim() || null,
+        whatsapp_url: input.whatsappUrl?.trim() || null,
         address: input.address?.trim() || null,
         phone: input.phone?.trim() || null,
         opening_time: input.openingTime?.trim() || null,

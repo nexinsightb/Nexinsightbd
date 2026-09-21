@@ -18,7 +18,21 @@ export default function FounderProof() {
             />
             <div className="founder-meta">
               <p className="founder-name">
-                Tasnim Ullah &amp; Faruk Abdullah Riyad
+                <a
+                  href="https://www.facebook.com/tsnm.u1"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Tasnim Ullah
+                </a>
+                {' & '}
+                <a
+                  href="https://www.facebook.com/faruk.abdullah.riyad.2024"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Faruk Abdullah Riyad
+                </a>
               </p>
               <p className="founder-role">Founders, NexInsight</p>
             </div>

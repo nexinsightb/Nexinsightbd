@@ -17,6 +17,9 @@ interface FormErrors {
   name?: string;
   slug?: string;
   googleReviewUrl?: string;
+  facebookUrl?: string;
+  instagramUrl?: string;
+  whatsappUrl?: string;
   feedbackBackendUrl?: string;
   campaignBackendUrl?: string;
 }
@@ -42,6 +45,10 @@ interface FormState {
   campaignTitle: string;
   campaignDescription: string;
   campaignButtonText: string;
+  // § 5.5 Social Links (→ restaurants)
+  facebookUrl: string;
+  instagramUrl: string;
+  whatsappUrl: string;
   // § 6 Restaurant Information (→ restaurants)
   address: string;
   phone: string;
@@ -75,6 +82,9 @@ const INITIAL_STATE: FormState = {
   campaignTitle: "",
   campaignDescription: "",
   campaignButtonText: "",
+  facebookUrl: "",
+  instagramUrl: "",
+  whatsappUrl: "",
   address: "",
   phone: "",
   openingTime: "",
@@ -283,6 +293,15 @@ export default function AddRestaurantForm() {
     if (form.googleReviewUrl && !isValidUrl(form.googleReviewUrl)) {
       errs.googleReviewUrl = "Must be a valid URL (https://...).";
     }
+    if (form.facebookUrl && !isValidUrl(form.facebookUrl)) {
+      errs.facebookUrl = "Must be a valid URL (https://...).";
+    }
+    if (form.instagramUrl && !isValidUrl(form.instagramUrl)) {
+      errs.instagramUrl = "Must be a valid URL (https://...).";
+    }
+    if (form.whatsappUrl && !isValidUrl(form.whatsappUrl)) {
+      errs.whatsappUrl = "Must be a valid URL (https://...).";
+    }
     if (form.feedbackBackendUrl && !isValidUrl(form.feedbackBackendUrl)) {
       errs.feedbackBackendUrl = "Must be a valid URL.";
     }
@@ -322,6 +341,9 @@ export default function AddRestaurantForm() {
         campaignTitle: form.campaignTitle,
         campaignDescription: form.campaignDescription,
         campaignButtonText: form.campaignButtonText,
+        facebookUrl: form.facebookUrl,
+        instagramUrl: form.instagramUrl,
+        whatsappUrl: form.whatsappUrl,
         address: form.address,
         phone: form.phone,
         openingTime: form.openingTime,
@@ -799,6 +821,62 @@ export default function AddRestaurantForm() {
                   onChange={(e) => setField("campaignButtonText", e.target.value)}
                   disabled={!form.campaignEnabled}
                 />
+              </div>
+            </div>
+          </div>
+
+          {/* ════ § SOCIAL LINKS ═════════════════════════════════ */}
+          <div className="arf-card">
+            <div className="arf-section-header">
+              <span className="arf-section-badge" aria-hidden="true">★</span>
+              <div>
+                <div className="arf-section-title">Social Links</div>
+                <div className="arf-section-sub">Optional social media &amp; messaging profile URLs</div>
+              </div>
+            </div>
+
+            <div className="arf-fields">
+              <div className="arf-field" id="arf-field-facebookUrl">
+                <label htmlFor="arf-facebook-url" className="arf-label">Facebook URL</label>
+                <input
+                  id="arf-facebook-url"
+                  type="url"
+                  className={`arf-input${errors.facebookUrl ? " arf-input-error" : ""}`}
+                  placeholder="https://facebook.com/restaurantname"
+                  value={form.facebookUrl}
+                  onChange={(e) => setField("facebookUrl", e.target.value)}
+                  autoComplete="off"
+                />
+                {errors.facebookUrl && <span className="arf-error-text" role="alert">{errors.facebookUrl}</span>}
+              </div>
+
+              <div className="arf-field" id="arf-field-instagramUrl">
+                <label htmlFor="arf-instagram-url" className="arf-label">Instagram URL</label>
+                <input
+                  id="arf-instagram-url"
+                  type="url"
+                  className={`arf-input${errors.instagramUrl ? " arf-input-error" : ""}`}
+                  placeholder="https://instagram.com/restaurantname"
+                  value={form.instagramUrl}
+                  onChange={(e) => setField("instagramUrl", e.target.value)}
+                  autoComplete="off"
+                />
+                {errors.instagramUrl && <span className="arf-error-text" role="alert">{errors.instagramUrl}</span>}
+              </div>
+
+              <div className="arf-field" id="arf-field-whatsappUrl">
+                <label htmlFor="arf-whatsapp-url" className="arf-label">WhatsApp URL</label>
+                <input
+                  id="arf-whatsapp-url"
+                  type="url"
+                  className={`arf-input${errors.whatsappUrl ? " arf-input-error" : ""}`}
+                  placeholder="https://wa.me/8801XXXXXXXXX"
+                  value={form.whatsappUrl}
+                  onChange={(e) => setField("whatsappUrl", e.target.value)}
+                  autoComplete="off"
+                />
+                {errors.whatsappUrl && <span className="arf-error-text" role="alert">{errors.whatsappUrl}</span>}
+                <span className="arf-helper">All fields are optional. Leave blank to hide the social icon from the public page.</span>
               </div>
             </div>
           </div>
